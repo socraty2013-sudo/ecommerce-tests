@@ -1,0 +1,20 @@
+# 当前为GitHub Actions 的 YAML 文件，GitHub 检测到仓库有 push/PR 时就自动执行里面的步骤。
+
+name: 测试          # 流水线名称，GitHub 页面上显示
+
+on:                # 什么时候触发
+  push:
+    branches: [main]      # main 分支有推送就触发
+  pull_request:
+    branches: [main]      # 有人提 PR（pre request） 到 main 也触发
+
+jobs:               # 干什么活
+  test:             # 第一个任务叫 test（随便起）
+    runs-on: ubuntu-latest  # 在 GitHub 提供的 Ubuntu 虚拟机上跑
+    steps:          # 任务分几步
+      - uses: actions/checkout@v4        # 步骤1：拉代码 。@v4:2负责拉代码的脚本，目前迭代到第 4 版（官方维护，最新且最稳定的大版本自动化脚本）
+      - uses: actions/setup-python@v5    # 步骤2：装 Python。 @v5:负责装 Python 的脚本，目前迭代到第 5 版（官方维护，最新且最稳定的大版本自话脚本）
+        with:
+          python-version: '3.13'
+      - run: pip install -r requirements.txt   # 步骤3：装依赖
+      - run: pytest tests/ -v --ignore=tests/test_ui_*.py   # 步骤4：跑测试
