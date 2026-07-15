@@ -17,4 +17,4 @@ jobs:               # 干什么活
         with:
           python-version: '3.13'
       - run: pip install -r requirements.txt   # 步骤3：装依赖
-      - run: pytest tests/ -v --ignore=tests/test_ui_*.py   # 步骤4：跑测试
+      - run: pytest tests/ -v --ignore-glob=tests/test_ui_*.py   # 步骤4：跑测试
