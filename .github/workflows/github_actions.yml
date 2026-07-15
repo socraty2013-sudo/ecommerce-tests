@@ -11,11 +11,12 @@ on:                # 什么时候触发
 jobs:          # 干什么活
   test:        # 第一个任务叫 test（随便起）
     runs-on: ubuntu-latest  # 在 GitHub 提供的 Ubuntu 虚拟机上跑
-    matrix:    # matrix 多版本策略—— 同一套测试，让 GitHub 同时在 Python 3.12 和 3.13 上各跑一遍。两个版本分别起一个 CI
-      python-version: ['3.12', '3.13']
+    strategy:
+      matrix:    # matrix 多版本策略—— 同一套测试，让 GitHub 同时在 Python 3.12 和 3.13 上各跑一遍。两个版本分别起一个 CI
+        python-version: ['3.12', '3.13']
     steps:     # 任务分几步
       - uses: actions/checkout@v4        # 步骤1：拉代码 。@v4:2负责拉代码的脚本，目前迭代到第 4 版（官方维护，最新且最稳定的大版本自动化脚本）
-      - uses: actions/setup-python@v5    # 步骤2：装 Python。 @v5:负责装 Python 的脚本，目前迭代到第 5 版（官方维护，最新且最稳定的大版本自话脚本）
+      - uses: actions/setup-python@v5    # 步骤2：装 Python。 @v5:负责装 Python 的脚本，目前迭代到第 5 版（官方维护，最新且最稳定的大版本自动化脚本）
         with:
           python-version: ${{ matrix.python-version }}
       - run: pip install -r requirements.txt   # 步骤3：装依赖
