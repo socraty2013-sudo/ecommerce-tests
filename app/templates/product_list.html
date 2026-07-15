@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>商品列表</title>
+</head>
+<body>
+    <h1>商品列表</h1>
+    {% if session.user %}
+    <p>当前用户：{{ session.user }} | <a href="/logout">退出</a></p>
+    {% else %}
+    <p><a href="/login">请登录</a></p>
+    {% endif %}
+
+    <table border="1" cellpadding="5">
+        <tr>
+            <th>ID</th>
+            <th>名称</th>
+            <th>价格</th>
+            <th>库存</th>
+        </tr>
+        {% for p in products %}
+        <tr>
+            <td>{{ p[0] }}</td>
+            <td>{{ p[1] }}</td>
+            <td>{{ p[2] }}</td>
+            <td>{{ p[3] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    {% if session.user %}
+    <p><a href="/products/add">新增商品</a></p>
+    {% endif %}
+</body>
+</html>

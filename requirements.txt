@@ -1,0 +1,9 @@
+pytest
+allure-pytest
+playwright
+pytest-playwright
+requests
+Flask
+pytest-cov
+pytest-rerunfailures
+pytest-xdist

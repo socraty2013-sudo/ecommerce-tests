@@ -1,9 +1,10 @@
+cat > .gitignore << 'EOF'
 .venv/
-.git/
 .idea/
-.pytest_cache/
 __pycache__/
+*.pyc
 ecommerce.db
 allure-results/
 allure-report/
 ecommerce_tests.egg-info/
+EOF

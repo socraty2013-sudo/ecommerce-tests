@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>登录</title>
+</head>
+<body>
+    <h1>电商后台 - 登录</h1>
+    {% if error %}
+    <p style="color: red;">{{ error }}</p>
+    {% endif %}
+    <form method="POST" action="/login">
+        <label>用户名：</label>
+        <input type="text" name="username" required><br><br>
+        <label>密　码：</label>
+        <input type="password" name="password" required><br><br>
+        <button type="submit">登录</button>
+    </form>
+</body>
+</html>
