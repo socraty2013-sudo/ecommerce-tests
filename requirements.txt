@@ -7,3 +7,4 @@ Flask
 pytest-cov
 pytest-rerunfailures
 pytest-xdist
+locust

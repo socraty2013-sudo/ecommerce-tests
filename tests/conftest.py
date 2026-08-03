@@ -16,10 +16,6 @@ def app():
     # 建表
     init_db(TEST_DB)
     # 这里是给测试库（test_ecommerce.db）执行初始化--插入初始化的用户数据（与seed.py中的生产库初始化分开）
-    conn = sqlite3.connect(TEST_DB)
-    conn.execute("INSERT INTO users(username, password) VALUES (?, ?)", ("admin", "123456"))
-    conn.commit()
-    conn.close()
 
     yield application
 

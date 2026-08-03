@@ -29,6 +29,10 @@ def init_db(db_path):  # 这里不用g.db。因为该方法启动时调用，不
     cursor.execute(create_sql1)
     cursor.execute(create_sql2)
 
+    # 种子数据：确保 admin 账号始终存在（INSERT OR IGNORE 遇到重复 username 时静默跳过，不报错）
+    cursor.execute("INSERT OR IGNORE INTO users(username, password) VALUES (?, ?)", ("admin", "123456"))
+    conn.commit()
+
     conn.close()  # 注意，这里用的是conn，不是cursor。这里关闭连接后，游标cursor也会关联失效。
 
 

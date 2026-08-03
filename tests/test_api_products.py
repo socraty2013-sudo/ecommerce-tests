@@ -16,7 +16,7 @@ def test_add_product(client):
     with allure.step("先登录"):   # ⬅️写在函数内部的写法。写在前面的写法类似于：@allure.step("登录操作")
         login(client)
 
-    with allure.step("提交新增商品请求"):    # allure.
+    with allure.step("提交新增商品请求"):
         res = client.post("/products/add", data = {"name":"测试商品2", "price":"1.00", "stock":"100"})
 
     with allure.step("验证重返回 302定向"):

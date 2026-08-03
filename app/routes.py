@@ -1,6 +1,16 @@
 from app import app
 from flask import render_template, request,session,redirect
-from app.models import get_user, get_all_products, create_product  # 这里必须得加【app.】 ，即使在同目录下也要加
+from app.models import get_user, get_all_products, create_product
+from functools import wraps
+
+
+def login_required(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        if "user" not in session:
+            return redirect("/login")
+        return f(*args, **kwargs)
+    return decorated
 
 
 # 访问 http://localhost:5000/（Flask开发服务器默认地址） → Flask 找到 index() → 返回 product_list.html 页面
@@ -34,7 +44,8 @@ def logout():
     session.pop("user", None)
     return redirect("/login")
 
-@app.route("/products/add", methods =["GET","POST"])  # 接口存在多个请求方式时，需用methods。必须加s
+@app.route("/products/add", methods =["GET","POST"])
+@login_required   # agent 写了个装饰器，作用是防止越权（鉴定user 是否在 session 中）
 def add_product():
     if request.method == "POST":
         name = request.form["name"]
@@ -45,7 +56,3 @@ def add_product():
         return redirect("/")
     else:
         return render_template("product_add.html")
-
-
-
-
