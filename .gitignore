@@ -3,6 +3,8 @@
 __pycache__/
 *.pyc
 ecommerce.db
+*.db-wal
+*.db-shm
 allure-results/
 allure-report/
 ecommerce_tests.egg-info/

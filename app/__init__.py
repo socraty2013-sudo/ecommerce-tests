@@ -27,8 +27,10 @@ def before_request():
     # 3️⃣ 从字典里通过键：DATABASE，取出 "ecommerce.db" 这个值，用来连接数据库。current_app 就是当前正在运行的 app 的引用，current_app.config 就是上面2️⃣那个字典。
     #     相当于：current_app.config["DATABASE"]  →  "ecommerce.db"
     # timeout=10：SQLite 默认遇到并发写会立刻报 "database is locked"。加 timeout 后，连接会【排队等锁】最多 10 秒，而不是立刻报错。
-    #     这是生产环境 SQLite 处理并发写的标准解法（Locust 并发压测时尤其需要）。
+    # WAL（Write-Ahead Logging，预写日志）模式：让【读不阻塞写、写不阻塞读】，SQLite 应对并发读写的标准配置。
+    #     仅 timeout 在 150 并发持续写下仍会锁库（排队超时），加 WAL 后锁冲突大幅下降（本地验证：0 锁库）。
     g.db = sqlite3.connect(current_app.config["DATABASE"], timeout=10)
+    g.db.execute("PRAGMA journal_mode=WAL")
 
     # 4️⃣ app.config["DATABASE"] = "test_ecommerce.db"  假设是要创建新的测试数据库。在 conftest 中配置
 
