@@ -26,7 +26,9 @@ def before_request():
 
     # 3️⃣ 从字典里通过键：DATABASE，取出 "ecommerce.db" 这个值，用来连接数据库。current_app 就是当前正在运行的 app 的引用，current_app.config 就是上面2️⃣那个字典。
     #     相当于：current_app.config["DATABASE"]  →  "ecommerce.db"
-    g.db = sqlite3.connect(current_app.config["DATABASE"])
+    # timeout=10：SQLite 默认遇到并发写会立刻报 "database is locked"。加 timeout 后，连接会【排队等锁】最多 10 秒，而不是立刻报错。
+    #     这是生产环境 SQLite 处理并发写的标准解法（Locust 并发压测时尤其需要）。
+    g.db = sqlite3.connect(current_app.config["DATABASE"], timeout=10)
 
     # 4️⃣ app.config["DATABASE"] = "test_ecommerce.db"  假设是要创建新的测试数据库。在 conftest 中配置
 
