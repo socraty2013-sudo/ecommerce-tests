@@ -1,5 +1,3 @@
-from tests.helpers import login
-
 # 数据库连接，判断用户是否存在
 def test_admin_user_exists(db):
     cursor = db.cursor()
@@ -13,9 +11,8 @@ def test_admin_user_exists(db):
 
 
 # 通过接口新增商品，再用 db 直连数据库验证数据真的落表了
-def test_add_product_written_to_db(client, db):
-    login(client)
-    client.post("/products/add", data = {"name":"测试商品2", "price":"2.00", "stock":"100"})
+def test_add_product_written_to_db(business_api_logged_in, db):
+    business_api_logged_in.create_product("测试商品2","2.00", "100")
 
     cursor =db.cursor()
     cursor.execute("SELECT * FROM products WHERE name = ?", ("测试商品2",))

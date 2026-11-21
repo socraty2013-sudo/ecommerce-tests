@@ -20,7 +20,7 @@ services:           # 下面列要跑几个容器
     build: .                        # 镜像从哪来 → 当前目录的 Dockerfile。compose 构建一次镜像，两个容器复用
     command: pytest tests/ -v       # 覆盖掉 Dockerfile 里的 CMD，不跑 Flask，跑 pytest
     volumes:              # 目录怎么挂载
-      - .:/app            # 当前目录 → 容器的 /app
+      - .:/app            # . 指当前宿主机上当前项目的目录（本地） → 映射到容器的 /app 。两边同步镜像（同一份代码/环境/配置等）
     environment:
       - FLASK_APP=app     # 告诉 Flask CLI ：应用在 app/ 目录下（app/__init__.py 里），没有这个它找不到入口。
     depends_on:

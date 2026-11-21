@@ -1,0 +1,6 @@
+# 生产环境配置
+env: prod
+base_url: http://prod.example.com
+user:
+  username: admin
+  password: "123456"

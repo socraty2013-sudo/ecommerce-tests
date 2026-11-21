@@ -14,7 +14,7 @@ class MyUser(HttpUser):     # HttpUser：模拟一个「用户」，能做多个
     # 5 代表权重，数字越大，权重越高，性能测试过程中相应操作占比就越多。不写(N)，则默认为权重 1
     @task(5)
     def browse_products(self):    # 任务函数，模拟访问首页（商品列表页）
-        self.client.get("/")      # 发起 GET 请求访问网站根路径。具体目标域名 / IP 不在代码里写，启动命令中 --host 传入：locust -f 你的脚本名.py --host=http://127.0.0.1:5000
+        self.client.get("/")      # 发起 GET 请求访问网站根路径。具体目标域名 / IP 不在代码里写，在启动命令中 --host 传入：locust -f 你的脚本名.py --host=http://127.0.0.1:5000
 
     wait_time = constant(1)     # 单个虚拟用户做完一件事后，休息1s，再执行下一次请求，最左侧的 icon（同心圆+箭头），代表：「重写父类属性」。
 

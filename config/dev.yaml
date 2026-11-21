@@ -1,0 +1,6 @@
+# 开发环境配置
+env: dev
+base_url: http://127.0.0.1:8000
+user:
+  username: admin
+  password: "123456"

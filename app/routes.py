@@ -1,7 +1,19 @@
+import hmac
+import hashlib
+
 from app import app
 from flask import render_template, request,session,redirect
-from app.models import get_user, get_all_products, create_product
+from app.models import get_user, get_all_products, get_product, create_product, delete_product as delete_product_db
 from functools import wraps
+
+# 支付接口的签名密钥（测试环境固定值，生产环境走环境变量）
+PAY_SECRET = "ecommerce_test_secret_2026"
+
+
+def calc_sign(params, secret=PAY_SECRET):
+    """签名规则：参数按 key 字典序拼成 k=v&k=v（排除 sign），再用 HMAC-SHA256 加密钥"""
+    s = "&".join(f"{k}={params[k]}" for k in sorted(params) if k != "sign")
+    return hmac.new(secret.encode(), s.encode(), hashlib.sha256).hexdigest()
 
 
 def login_required(f):
@@ -37,6 +49,23 @@ def login():
         return render_template("login.html")
 
 
+# 【本次新迭代，开发新交付的接口】加密登录：前端已经把密码 md5 过，后端只比对哈希
+@app.route("/login_enc", methods=["GET", "POST"])
+def login_enc():
+    if request.method == "POST":
+        username = request.form["username"]
+        password_hash = request.form["password"]
+        user = get_user(username)
+
+        if user and user[3] == password_hash:   # 索引 3 是 password_hash 列
+            session["user"] = username
+            return redirect("/")
+        else:
+            return render_template("login.html", error="用户名或密码错误")
+    else:
+        return render_template("login.html")
+
+
 @app.route("/logout")
 def logout():
 
@@ -56,3 +85,33 @@ def add_product():
         return redirect("/")
     else:
         return render_template("product_add.html")
+
+
+# 【本次新迭代，开发新交付的接口】删除商品：登录后才能删，删完回首页
+@app.route("/products/<int:product_id>/delete", methods=["POST"])
+@login_required
+def product_delete(product_id):
+    delete_product_db(product_id)
+    return redirect("/")
+
+
+# 【本次新迭代，开发新交付的接口】商品详情页：看单个商品的完整信息；不存在则 404
+@app.route("/products/<int:product_id>")
+def product_detail(product_id):
+    product = get_product(product_id)
+    if product is None:
+        return render_template("product_not_found.html"), 404
+    return render_template("product_detail.html", product=product)
+
+
+# 【本次新迭代，开发新交付的接口】支付：必须带合法签名，否则拒绝
+@app.route("/pay", methods=["POST"])
+def pay():
+    params = request.form.to_dict()
+    sign = params.pop("sign", None)
+
+    # compare_digest 是定长比较，防止通过响应时间差猜测签名（时序攻击）
+    if not sign or not hmac.compare_digest(sign, calc_sign(params)):
+        return {"code": 400, "msg": "签名错误"}, 400
+
+    return {"code": 0, "msg": "支付成功", "order_id": params.get("order_id")}

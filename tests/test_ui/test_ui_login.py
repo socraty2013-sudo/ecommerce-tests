@@ -4,14 +4,13 @@ def test_login_success(page, live_server):
     page.goto (f"{live_server}/login")    # 从 live_server fixture 拿到 "http://localhost:5555"(macOS 的 AirPlay Receiver 占用了 Flask的5000 端口)
     login_page = LoginPage(page, live_server)   # 实例化
     login_page.login()    # 这里是 login.py 里的 LoginPage 类的方法
-    assert login_page.get_current_user() == "admin"
+    assert login_page.get_current_user() == "admin3"
 
 def test_login_fail(page, live_server):
     page.goto(f"{live_server}/login")
     login_page = LoginPage(page, live_server)
     login_page.login(username="admin", password="wrongpassword")  # 传错误密码，断言页面出现错误提示
     assert login_page.get_error_message() == "用户名或密码错误"
-
 
 
 """

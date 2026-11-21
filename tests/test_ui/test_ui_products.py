@@ -18,7 +18,8 @@ def test_add_product(page, live_server):
     count = product_page.get_product_count()
     product_page.add_product("测试商品3", "1.00", "100")
     assert product_page.get_product_count()  == count +1
-    assert page.locator("td:text('测试商品3')").is_visible()  # 不走计数，直接查元素是否存在。td:text('测试商品3')：页面里找一个内容等于"测试商品3"的 <td> 格子，看它存不存在。
+    # 商品名现在包在 <a> 链接里（td 的直接文本是空的）→ td:text 匹配不到，改用 td:has-text 找「后代里有这个名字」的格子
+    assert page.locator("td:has-text('测试商品3')").is_visible()
 
 
 

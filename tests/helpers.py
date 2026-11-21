@@ -1,4 +1,6 @@
+import os
 
-# conftest.py 是 pytest 自动加载的特殊文件，不能当普通模块 import，故将login 辅助函数移到了 tests/helpers.py。
-def login(client, username="admin", password="123456"):
-    return client.post("/login", data={"username": username, "password": password})
+# 测试用公共常量。
+# 注：原 login() 辅助函数已由业务封装层 BusinessApi.login() 取代（2026-08-18 全项目不再调用），
+#     故 helpers.py 只保留公共常量 TEST_DB。
+TEST_DB = os.path.join(os.path.dirname(__file__), "test_ecommerce.db")  # os.path.dirname 指当前文件所在的目录

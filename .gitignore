@@ -13,3 +13,19 @@ notes/
 reports/
 /*.html
 
+.env
+
+# 所有 md 文档不进仓库
+*.md
+
+# 数据库与运行产物
+ecommerce_dev.db
+dump.rdb
+screenshots/
+
+# AI 评测运行产物
+ai_test_demo/answers.json
+ai_test_demo/judge_ai_results.json
+
+# 临时演示用例
+tests/test_api/test_temp_fail.py
